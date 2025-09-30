@@ -15,6 +15,8 @@ We encourage you to:
 
 - **Submit issues** using GitHub’s issue tracker.
 - Use **tags** to categorize your feedback (e.g., `bug`, `suggestion`, `praise`, `question`).
+- Use **[issue] tags** to provide details your feeedback when applicable.
+- Use **[feature] tags** to indicate which feature your feedback relates to.
 - **Monitor your issues** after submission — we may follow up with questions or clarifications.
 
 ### What to Include
