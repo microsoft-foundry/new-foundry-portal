@@ -17,7 +17,7 @@ We encourage you to:
 - Use **tags** to categorize your feedback (e.g., `bug`, `suggestion`, `praise`, `question`).
 - **Monitor your issues** after submission — we may follow up with questions or clarifications.
 
-## What to Include
+### What to Include
 
 When submitting feedback, please include:
 
