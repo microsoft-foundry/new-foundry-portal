@@ -36,6 +36,17 @@ We’ll use this space to:
 - Share known issues and workarounds.
 - Provide timelines and progress updates.
 
+
+## Important Notes
+
+- This is a **confidential, early access private preview**, so frequent changes are expected.
+- Please be prepared to adopt updates and improvements as they are released.
+- **Do not use production resources**; preview features are for internal evaluation only.
+- Please remember that this private preview comprises **new and innovative technology**.  
+  Results are not guaranteed, and your **human oversight and review are crucial**.  
+  You are accountable for determining the appropriateness of using the private preview and you **assume all risks** associated with its use and results.
+
+
 ## Thank You
 
 Your insights are invaluable. Thank you for helping us build a better experience for all genAI developers, your support during this phase means a lot!
