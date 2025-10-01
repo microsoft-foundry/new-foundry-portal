@@ -26,7 +26,7 @@ Steps to reproduce the behavior:
 - **Browser**: [e.g., Chrome, Safari]  
 - **Version**: [e.g., 22]
 
-**Labels**
+## Labels
 Please include relevant labels such as:  
 - **Feature Area**: [e.g., Dashboard, Settings, Notifications]  
 - **Issue**: [e.g., Deployment, UI]  
