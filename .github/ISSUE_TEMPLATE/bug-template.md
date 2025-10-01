@@ -26,5 +26,10 @@ Steps to reproduce the behavior:
 - **Browser**: [e.g., Chrome, Safari]  
 - **Version**: [e.g., 22]
 
+**Labels**
+Please include relevant labels such as:  
+- **Feature Area**: [e.g., Dashboard, Settings, Notifications]  
+- **Issue**: [e.g., Deployment, UI]  
+
 ## Additional Context  
 Add any other relevant context, links, or observations here.
