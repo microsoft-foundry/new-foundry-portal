@@ -7,16 +7,16 @@ assignees: ''
 
 ---
 
-**Open Question**
+##Open Question
 Write your question clearly. What are you curious about, unsure of, or seeking clarification on?
 
-**Context**
+##Context
 Provide any background or context that helps explain your question. What prompted it? Where did it come up?
 
-**Additional Details**
-Include any relevant screenshots, links, or examples that might help others understand or respond to your question.
-
-**Labels**
+## Labels
 Please include relevant labels such as:  
 - **Feature Area**: [e.g., Dashboard, Settings, Notifications]  
-- **Issue**: [e.g., Deployment, UI]
+- **Issue**: [e.g., Deployment, UI] 
+
+##Additional Details
+Include any relevant screenshots, links, or examples that might help others understand or respond to your question.
