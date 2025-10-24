@@ -1,5 +1,8 @@
 🚀 Big News! Private Preview Next Milestone – October 27 🎉
-We’re thrilled to announce that on October 27, our private preview portal is getting a major upgrade with powerful new features designed to supercharge your experience:
+
+We’re thrilled to announce that on October 27, our private preview portal is getting a major upgrade with powerful new features designed to supercharge your experience.
+
+_______________________
 
 
 # The Azure AI Foundry Portal - Private Preview Feedback Hub
