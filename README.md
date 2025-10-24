@@ -1,3 +1,7 @@
+🚀 Big News! Private Preview Next Milestone – October 27 🎉
+We’re thrilled to announce that on October 27, our private preview portal is getting a major upgrade with powerful new features designed to supercharge your experience:
+
+
 # The Azure AI Foundry Portal - Private Preview Feedback Hub
 
 Welcome to the feedback space for the **The Aure AI Foundry Portal Private Preview**. This repository is your direct line to the Azure AI Foundry Product Group as we shape the next generation of developer experience together.
