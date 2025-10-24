@@ -1,13 +1,13 @@
 🔥 Your AI experience is about to level up! 🔥
-![Launch Date: Oct 27](https://img.shields.io/badge/Launch%20Date-Oct%2027-blueview](https://img.shields.io/badge/Status-Private%20Preview-greens://img.shieldsatures-orange
 
-# Announcements
-### 🚀 **Big News! Private Preview Launch – October 27** 🎉
+!Launch Date: Oct 27
+
+#Announcements
+🚀 **Big News! Private Preview Launch – October 27** 🎉
 
 We’re thrilled to announce that **on October 27**, our private preview portal is getting a major upgrade with **powerful new features** designed to supercharge your experience:
 
-✅ **Catalog** – Discover and organize resources effortlessly.  
-✅ **IA (Intelligent Agents)** – Smarter interactions, better outcomes.  
+✅ **Catalog** – Discover and organize resources effortlessly.    
 ✅ **Notification Center** – Stay informed with real-time updates.  
 ✅ **Playgrounds** – Experiment, learn, and innovate in a safe space.  
 ✅ **Memory** – Context that sticks, for more personalized workflows.  
