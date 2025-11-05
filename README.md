@@ -7,7 +7,7 @@ _______________________
 
 # The Azure AI Foundry Portal - Private Preview Feedback Hub
 
-Welcome to the feedback space for the **The Aure AI Foundry Portal Private Preview**. This repository is your direct line to the Azure AI Foundry Product Group as we shape the next generation of developer experience together.
+Welcome to the feedback space for the **The Azure AI Foundry Portal Private Preview**. This repository is your direct line to the Azure AI Foundry Product Group as we shape the next generation of developer experience together.
 
 ## Purpose
 
