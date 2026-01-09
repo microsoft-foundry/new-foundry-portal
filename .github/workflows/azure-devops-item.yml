@@ -1,0 +1,59 @@
+name: Create Azure DevOps Bug from Issue
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  create-azure-bug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare mapping file
+        run: |
+          cat <<EOF > github-to-ado-users.json
+          {
+            "github_username1": "ado.user1@domain.com",
+            "github_username2": "ado.user2@domain.com"
+          }
+          EOF
+      - name: Create Azure DevOps Bug
+        env:
+          AZURE_DEVOPS_PAT: ${{ secrets.AZURE_DEVOPS_PAT }}
+          AZURE_DEVOPS_ORG: ${{ secrets.AZURE_DEVOPS_ORG }}
+          AZURE_DEVOPS_PROJECT: ${{ secrets.AZURE_DEVOPS_PROJECT }}
+        run: |
+          TITLE="${{ github.event.issue.title }}"
+          DESCRIPTION="${{ github.event.issue.body }}"
+          ASSIGNEE_GITHUB="${{ github.event.issue.assignee.login }}"
+          LABELS=$(echo "${{ toJSON(github.event.issue.labels) }}" | jq -r '.[].name' | paste -sd "," -)
+          
+          # Load mapping from GitHub username to Azure DevOps user email
+          if [ -n "$ASSIGNEE_GITHUB" ]; then
+            ASSIGNEE_ADO=$(jq -r --arg user "$ASSIGNEE_GITHUB" '.[$user]' github-to-ado-users.json)
+          else
+            ASSIGNEE_ADO=""
+          fi
+          
+          # Build JSON payload
+          JSON_PAYLOAD="[
+              { \"op\": \"add\", \"path\": \"/fields/System.Title\", \"value\": \"$TITLE\" },
+              { \"op\": \"add\", \"path\": \"/fields/System.Description\", \"value\": \"$DESCRIPTION\" }
+          "
+          # Add assignee if mapped
+          if [ -n "$ASSIGNEE_ADO" ] && [ "$ASSIGNEE_ADO" != "null" ]; then
+            JSON_PAYLOAD="$JSON_PAYLOAD, { \"op\": \"add\", \"path\": \"/fields/System.AssignedTo\", \"value\": \"$ASSIGNEE_ADO\" }"
+          fi
+          # Add tags if labels exist
+          if [ -n "$LABELS" ]; then
+            JSON_PAYLOAD="$JSON_PAYLOAD, { \"op\": \"add\", \"path\": \"/fields/System.Tags\", \"value\": \"$LABELS\" }"
+          fi
+          JSON_PAYLOAD="$JSON_PAYLOAD ]"
+
+          # IMPORTANT: NOTE THE $Bug BELOW, for creating a Bug work item type!
+          API_URL="https://dev.azure.com/$AZURE_DEVOPS_ORG/$AZURE_DEVOPS_PROJECT/_apis/wit/workitems/\$Bug?api-version=7.0"
+          echo "Payload: $JSON_PAYLOAD"
+          
+          curl -s -u ":$AZURE_DEVOPS_PAT" \
+            -H "Content-Type: application/json-patch+json" \
+            -X POST "$API_URL" \
+            -d "$JSON_PAYLOAD"
