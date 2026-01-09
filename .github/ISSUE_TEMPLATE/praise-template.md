@@ -14,7 +14,7 @@ Clearly describe what you liked. Describe how this positively affected your work
 ## Labels
 Please include relevant labels such as:  
 - **Feature Area**: [e.g., Dashboard, Settings, Notifications]  
-- **Issue**: [e.g., Deployment, UI] 
+- **Issue**: [e.g., Deploy, UI] 
 
 ##Additional Context
 Add any relevant context, examples, or references that help clarify your point.  

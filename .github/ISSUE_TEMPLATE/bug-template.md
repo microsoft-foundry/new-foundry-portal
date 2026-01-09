@@ -3,7 +3,7 @@ name: Bug Template
 about: Please share as much detail as you can in your feedback, and include a clear
   title along with relevant labels for this bug.
 title: "[Bug] "
-labels: Bug
+labels: Bug, Suggestion
 assignees: ''
 
 ---
