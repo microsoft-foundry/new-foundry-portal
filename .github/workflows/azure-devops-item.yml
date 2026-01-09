@@ -16,41 +16,42 @@ jobs:
             "github_username2": "ado.user2@domain.com"
           }
           EOF
-      - name: Create Azure DevOps Bug
+            - name: Create Azure DevOps Bug
         env:
           AZURE_DEVOPS_PAT: ${{ secrets.AZURE_DEVOPS_PAT }}
           AZURE_DEVOPS_ORG: ${{ secrets.AZURE_DEVOPS_ORG }}
           AZURE_DEVOPS_PROJECT: ${{ secrets.AZURE_DEVOPS_PROJECT }}
         run: |
-          # Extract fields from GitHub Issue Event
           TITLE="${{ github.event.issue.title }}"
           DESCRIPTION="${{ github.event.issue.body }}"
           ASSIGNEE_GITHUB="${{ github.event.issue.assignee.login }}"
           LABELS=$(echo '${{ toJSON(github.event.issue.labels) }}' | jq -r '.[].name' | paste -sd "," -)
 
-           # Load mapping from GitHub username to Azure DevOps user email
           if [ -n "$ASSIGNEE_GITHUB" ]; then
             ASSIGNEE_ADO=$(jq -r --arg user "$ASSIGNEE_GITHUB" '.[$user]' github-to-ado-users.json)
           else
             ASSIGNEE_ADO=""
           fi
 
-          # Build JSON Patch body using jq for all user values
+          # Build the start of the JSON payload
           JSON_PAYLOAD="[
             { \"op\": \"add\", \"path\": \"/fields/System.Title\", \"value\": $(jq -Rn --arg v \"$TITLE\" '$v') },
             { \"op\": \"add\", \"path\": \"/fields/System.Description\", \"value\": $(jq -Rn --arg v \"$DESCRIPTION\" '$v') }"
 
-          # Add assignee if mapped
+          # Add assignee if applicable
           if [ -n "$ASSIGNEE_ADO" ] && [ "$ASSIGNEE_ADO" != "null" ]; then
             JSON_PAYLOAD="$JSON_PAYLOAD, { \"op\": \"add\", \"path\": \"/fields/System.AssignedTo\", \"value\": $(jq -Rn --arg v \"$ASSIGNEE_ADO\" '$v') }"
           fi
-          # Add tags if labels exist
+
+          # Add tags if applicable
           if [ -n "$LABELS" ]; then
             JSON_PAYLOAD="$JSON_PAYLOAD, { \"op\": \"add\", \"path\": \"/fields/System.Tags\", \"value\": $(jq -Rn --arg v \"$LABELS\" '$v') }"
           fi
-          JSON_PAYLOAD="$JSON_PAYLOAD ]"
 
-          # Azure DevOps API endpoint for Bug work item
+          # Close JSON array
+          JSON_PAYLOAD="$JSON_PAYLOAD
+          ]"
+
           API_URL="https://dev.azure.com/$AZURE_DEVOPS_ORG/$AZURE_DEVOPS_PROJECT/_apis/wit/workitems/\$Bug?api-version=7.0"
           echo "Payload: $JSON_PAYLOAD"
 
