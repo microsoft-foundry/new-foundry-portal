@@ -18,7 +18,7 @@ A clear and concise description of what you want to happen. Explain what you hop
 ##Labels
 Please include relevant labels such as:  
 - **Feature Area**: [e.g., Dashboard, Settings, Notifications]  
-- **Issue**: [e.g., Deployment, UI Improvements]
+- **Issue**: [e.g., Deploy, UI Improvements]
 
 ##Additional Context
 Add any relevant context, examples, or references that help clarify your suggestion.  
