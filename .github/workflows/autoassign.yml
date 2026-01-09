@@ -22,7 +22,7 @@ jobs:
               { keywords: ["agent"], assignee: "lebaro-msft" },
               { keywords: ["fine-tuning"], assignee: "AliciaFrame" },
               { keywords: ["deployment", "API"], assignee: "johnrsanders" },
-              { keywords: ["rag", "data"], assignee: "farzad528" },
+              { keywords: ["rag", "data", "knowledge"], assignee: "farzad528" },
               { keywords: ["model", "catalog"], assignee: "amibp" },
               { keywords: ["design"], assignee: "Quirinevwm" },
               { keywords: ["slow", "error"], assignee: "slumley" },
