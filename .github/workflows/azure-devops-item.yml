@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
 
       # 2. Create a bug in Azure DevOps, mapping assignee if possible
-      - name: Create Azure DevOps Bug
+     - name: Create Azure DevOps Bug
         env:
           AZURE_DEVOPS_PAT: ${{ secrets.AZURE_DEVOPS_PAT }}
           AZURE_DEVOPS_ORG: ${{ secrets.AZURE_DEVOPS_ORG }}
@@ -23,31 +23,33 @@ jobs:
           ASSIGNEE_GITHUB="${{ github.event.issue.assignee.login }}"
           LABELS=$(echo '${{ toJSON(github.event.issue.labels) }}' | jq -r '.[].name' | paste -sd "," -)
 
-          # Load mapping from GitHub username to Azure DevOps user email
-          if [ -n "$ASSIGNEE_GITHUB" ]; then
-            ASSIGNEE_ADO=$(jq -r --arg user "$ASSIGNEE_GITHUB" '.[$user]' github-to-ado-users.json)
+          # Load mapping from GitHub username to Azure DevOps user email (safe if file missing)
+          if [ -n "$ASSIGNEE_GITHUB" ] && [ -f github-to-ado-users.json ]; then
+            ASSIGNEE_ADO=$(jq -r --arg user "$ASSIGNEE_GITHUB" '.[$user] // empty' github-to-ado-users.json)
           else
             ASSIGNEE_ADO=""
           fi
 
-          # Build the start of the JSON payload
-          JSON_PAYLOAD="[
-            { \"op\": \"add\", \"path\": \"/fields/System.Title\", \"value\": $(jq -Rn --arg v \"$TITLE\" '$v') },
-            { \"op\": \"add\", \"path\": \"/fields/System.Description\", \"value\": $(jq -Rn --arg v \"$DESCRIPTION\" '$v') }"
-
-          # Add assignee if applicable
-          if [ -n "$ASSIGNEE_ADO" ] && [ "$ASSIGNEE_ADO" != "null" ]; then
-            JSON_PAYLOAD="$JSON_PAYLOAD, { \"op\": \"add\", \"path\": \"/fields/System.AssignedTo\", \"value\": $(jq -Rn --arg v \"$ASSIGNEE_ADO\" '$v') }"
-          fi
-
-          # Add tags if applicable
-          if [ -n "$LABELS" ]; then
-            JSON_PAYLOAD="$JSON_PAYLOAD, { \"op\": \"add\", \"path\": \"/fields/System.Tags\", \"value\": $(jq -Rn --arg v \"$LABELS\" '$v') }"
-          fi
-
-          # Close JSON array
-          JSON_PAYLOAD="$JSON_PAYLOAD
-          ]"
+          # Build JSON Patch array with jq (conditionally include AssignedTo and Tags)
+          JSON_PAYLOAD=$(jq -n \
+            --arg title "$TITLE" \
+            --arg desc "$DESCRIPTION" \
+            --arg assignee "$ASSIGNEE_ADO" \
+            --arg labels "$LABELS" '
+              ($title, $desc) as [$t, $d] |
+              [
+                { "op": "add", "path": "/fields/System.Title", "value": $t },
+                { "op": "add", "path": "/fields/System.Description", "value": $d }
+              ]
+              +
+              (if ($assignee != "" and $assignee != "null") then
+                 [ { "op": "add", "path": "/fields/System.AssignedTo", "value": $assignee } ]
+               else [] end)
+              +
+              (if ($labels != "" and $labels != "null") then
+                 [ { "op": "add", "path": "/fields/System.Tags", "value": $labels } ]
+               else [] end)
+            ' | jq -c '.') # compact output
 
           API_URL="https://dev.azure.com/$AZURE_DEVOPS_ORG/$AZURE_DEVOPS_PROJECT/_apis/wit/workitems/\$Bug?api-version=7.0"
           echo "Payload: $JSON_PAYLOAD"
@@ -56,3 +58,4 @@ jobs:
             -H "Content-Type: application/json-patch+json" \
             -X POST "$API_URL" \
             -d "$JSON_PAYLOAD"
+...
