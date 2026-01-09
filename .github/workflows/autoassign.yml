@@ -31,11 +31,10 @@ jobs:
             ];
             let assignees = [];
             const issueTitle = context.payload.issue.title.toLowerCase();
-            const issueBody = (context.payload.issue.body || "").toLowerCase();
             for (const { keywords, assignee } of assignments) {
               if (
                 keywords.some(keyword =>
-                  issueTitle.includes(keyword) || issueBody.includes(keyword)
+                  issueTitle.includes(keyword)
                 )
               ) {
                 assignees.push(assignee);
