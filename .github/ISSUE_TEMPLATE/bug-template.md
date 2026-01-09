@@ -29,7 +29,7 @@ Steps to reproduce the behavior:
 ## Labels
 Please include relevant labels such as:  
 - **Feature Area**: [e.g., Dashboard, Settings, Notifications]  
-- **Issue**: [e.g., Deployment, UI]  
+- **Issue**: [e.g., Deploy, UI]  
 
 ## Additional Context  
 Add any other relevant context, links, or observations here.
