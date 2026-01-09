@@ -16,7 +16,8 @@ jobs:
             "github_username2": "ado.user2@domain.com"
           }
           EOF
-            - name: Create Azure DevOps Bug
+
+      - name: Create Azure DevOps Bug
         env:
           AZURE_DEVOPS_PAT: ${{ secrets.AZURE_DEVOPS_PAT }}
           AZURE_DEVOPS_ORG: ${{ secrets.AZURE_DEVOPS_ORG }}
@@ -27,6 +28,7 @@ jobs:
           ASSIGNEE_GITHUB="${{ github.event.issue.assignee.login }}"
           LABELS=$(echo '${{ toJSON(github.event.issue.labels) }}' | jq -r '.[].name' | paste -sd "," -)
 
+          # Load mapping from GitHub username to Azure DevOps user email
           if [ -n "$ASSIGNEE_GITHUB" ]; then
             ASSIGNEE_ADO=$(jq -r --arg user "$ASSIGNEE_GITHUB" '.[$user]' github-to-ado-users.json)
           else
