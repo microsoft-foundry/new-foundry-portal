@@ -1,0 +1,51 @@
+name: Auto Assign Issues
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  assign-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auto-assign based on keywords
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const assignments = [
+              { keywords: ["workflow", "multiagent"], assignee: "fniedtner" },
+              { keywords: ["playground", "model details"], assignee: "tgokal" },
+              { keywords: ["tool"], assignee: "lindazqli" },
+              { keywords: ["agent"], assignee: "lebaro-msft" },
+              { keywords: ["fine-tuning"], assignee: "AliciaFrame" },
+              { keywords: ["deployment", "API"], assignee: "johnrsanders" },
+              { keywords: ["rag", "data"], assignee: "farzad528" },
+              { keywords: ["model", "catalog"], assignee: "amibp" },
+              { keywords: ["design"], assignee: "Quirinevwm" },
+              { keywords: ["slow", "error"], assignee: "slumley" },
+              // Example with multiple keywords for the same assignee:
+              // { keywords: ["pipeline", "workflow"], assignee: "fniedtner" },
+            ];
+            let assignees = [];
+            const issueTitle = context.payload.issue.title.toLowerCase();
+            const issueBody = (context.payload.issue.body || "").toLowerCase();
+            for (const { keywords, assignee } of assignments) {
+              if (
+                keywords.some(keyword =>
+                  issueTitle.includes(keyword) || issueBody.includes(keyword)
+                )
+              ) {
+                assignees.push(assignee);
+              }
+            }
+            if (assignees.length === 0) {
+              // No keywords matched, assign to yourself
+              assignees.push("esrabakkal");
+            }
+            // Remove duplicates just in case
+            await github.rest.issues.addAssignees({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              assignees: [...new Set(assignees)]
+            });
