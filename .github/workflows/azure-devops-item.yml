@@ -8,26 +8,14 @@ jobs:
   create-azure-bug:
     runs-on: ubuntu-latest
     steps:
-      - name: Prepare mapping file
-        run: |
-          cat <<EOF > github-to-ado-users.json
-          {
-            "fniedtner": "fniedtner@microsoft.com",
-            "slumley": "slumley@microsoft.com"
-            "lindazqli": "zhuoqunli@microsoft.com",
-            "johnrsanders": "John.Sanders@microsoft.com"
-            "farzad528": "fsunavala@microsoft.com",
-            "lebaro-msft": "lebaro@microsoft.com"
-            "amibp": "amipatel@microsoft.com",
-            "meerakurup": "meerakurup@microsoft.com"
-            "AliciaFrame": "alicia.frame@microsoft.com",
-            "tgokal": "ado.user1@domain.com",
-            "ychang-msft": "Ying.Chang@microsoft.com",
-            "esrabakkal": "esbakkal@microsoft.com",
-            "Quirinevwm": "Quirine.VanWaltMeijer@microsoft.com"
-          }
-          EOF
+      # 1. Checkout your repo to access files
+      - uses: actions/checkout@v4
 
+      # 2. Copy the mapping file for use (or just use in-place if you prefer)
+      - name: Get user mapping file
+        run: cp .github/github-to-ado-users.json github-to-ado-users.json
+
+      # 3. Create a bug in Azure DevOps, mapping assignee if possible
       - name: Create Azure DevOps Bug
         env:
           AZURE_DEVOPS_PAT: ${{ secrets.AZURE_DEVOPS_PAT }}
