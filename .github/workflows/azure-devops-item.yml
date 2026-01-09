@@ -13,7 +13,7 @@ jobs:
 
       # 2. Copy the mapping file for use (or just use in-place if you prefer)
       - name: Get user mapping file
-        run: cp .github-to-ado-users.json github-to-ado-users.json
+        run: cp github-to-ado-users.json github-to-ado-users.json
 
       # 3. Create a bug in Azure DevOps, mapping assignee if possible
       - name: Create Azure DevOps Bug
