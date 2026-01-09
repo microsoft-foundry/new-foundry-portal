@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
 
       # 2. Create a bug in Azure DevOps, mapping assignee if possible
-     - name: Create Azure DevOps Bug
+      - name: Create Azure DevOps Bug
         env:
           AZURE_DEVOPS_PAT: ${{ secrets.AZURE_DEVOPS_PAT }}
           AZURE_DEVOPS_ORG: ${{ secrets.AZURE_DEVOPS_ORG }}
@@ -58,4 +58,3 @@ jobs:
             -H "Content-Type: application/json-patch+json" \
             -X POST "$API_URL" \
             -d "$JSON_PAYLOAD"
-...
