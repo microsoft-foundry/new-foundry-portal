@@ -16,7 +16,7 @@ Provide any background or context that helps explain your question. What prompte
 ## Labels
 Please include relevant labels such as:  
 - **Feature Area**: [e.g., Dashboard, Settings, Notifications]  
-- **Issue**: [e.g., Deployment, UI] 
+- **Issue**: [e.g., Deploy, UI] 
 
 ##Additional Details
 Include any relevant screenshots, links, or examples that might help others understand or respond to your question.
