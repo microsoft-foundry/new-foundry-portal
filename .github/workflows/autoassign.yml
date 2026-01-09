@@ -18,11 +18,11 @@ jobs:
             const assignments = [
               { keywords: ["workflow", "multiagent"], assignee: "fniedtner" },
               { keywords: ["playground", "model details"], assignee: "tgokal" },
-              { keywords: ["tool"], assignee: "lindazqli" },
+              { keywords: ["tool", "MCP", "OAuth"], assignee: "lindazqli" },
               { keywords: ["agent"], assignee: "lebaro-msft" },
               { keywords: ["fine-tuning"], assignee: "AliciaFrame" },
               { keywords: ["deployment", "API"], assignee: "johnrsanders" },
-              { keywords: ["rag", "data", "knowledge"], assignee: "farzad528" },
+              { keywords: ["rag", "data", 'IQ", "file", "knowledge"], assignee: "farzad528" },
               { keywords: ["model", "catalog"], assignee: "amibp" },
               { keywords: ["design"], assignee: "Quirinevwm" },
               { keywords: ["slow", "error"], assignee: "slumley" },
