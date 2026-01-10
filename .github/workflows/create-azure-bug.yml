@@ -9,7 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # 1. Checkout your repo to access files
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       # 2. Create a bug in Azure DevOps, mapping assignee if possible
       - name: Create Azure DevOps Bug
@@ -17,11 +18,16 @@ jobs:
           AZURE_DEVOPS_PAT: ${{ secrets.AZURE_DEVOPS_PAT }}
           AZURE_DEVOPS_ORG: ${{ secrets.AZURE_DEVOPS_ORG }}
           AZURE_DEVOPS_PROJECT: ${{ secrets.AZURE_DEVOPS_PROJECT }}
+          ISSUE_JSON: ${{ toJSON(github.event.issue) }}
+          LABELS_JSON: ${{ toJSON(github.event.issue.labels) }}
         run: |
-          TITLE="${{ github.event.issue.title }}"
-          DESCRIPTION="${{ github.event.issue.body }}"
-          ASSIGNEE_GITHUB="${{ github.event.issue.assignee.login }}"
-          LABELS=$(echo '${{ toJSON(github.event.issue.labels) }}' | jq -r '.[].name' | paste -sd "," -)
+          set -euo pipefail
+
+          # Safely extract fields from the event JSON using jq (handles nulls)
+          TITLE=$(echo "$ISSUE_JSON" | jq -r '.title // ""')
+          DESCRIPTION=$(echo "$ISSUE_JSON" | jq -r '.body // ""')
+          ASSIGNEE_GITHUB=$(echo "$ISSUE_JSON" | jq -r '.assignee.login // empty')
+          LABELS=$(echo "$LABELS_JSON" | jq -r '.[].name' | paste -sd "," -)
 
           # Load mapping from GitHub username to Azure DevOps user email (safe if file missing)
           if [ -n "$ASSIGNEE_GITHUB" ] && [ -f github-to-ado-users.json ]; then
