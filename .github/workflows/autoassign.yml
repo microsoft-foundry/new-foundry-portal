@@ -16,18 +16,19 @@ jobs:
         with:
           script: |
             const assignments = [
-              { keywords: ["workflow", "multiagent"], assignee: "fniedtner" },
+              { keywords: ["pipeline", "workflow", "multi-modal", "multimodal"], assignee: "fniedtner" },
               { keywords: ["playground", "model details"], assignee: "tgokal" },
               { keywords: ["tool", "MCP", "OAuth"], assignee: "lindazqli" },
               { keywords: ["agent"], assignee: "lebaro-msft" },
-              { keywords: ["fine-tuning"], assignee: "AliciaFrame" },
+              { keywords: ["fine-tuning", "finetuning"], assignee: "AliciaFrame" },
               { keywords: ["deployment", "API"], assignee: "johnrsanders" },
-              { keywords: ["rag", "data", "IQ", "file", "knowledge"], assignee: "farzad528" },
-              { keywords: ["model", "catalog"], assignee: "amibp" },
-              { keywords: ["design"], assignee: "Quirinevwm" },
+              { keywords: ["rag", "data", "IQ", "file", "vector", "knowledge"], assignee: "farzad528" },
+              { keywords: ["model", "catalog", "template"], assignee: "amibp" },
+              { keywords: ["design", "UI", "interface"], assignee: "Quirinevwm" },
+              { keywords: ["tracing"], assignee: "skohlmeier123" },
               { keywords: ["slow", "error"], assignee: "slumley" },
               // Example with multiple keywords for the same assignee:
-              // { keywords: ["pipeline", "workflow"], assignee: "fniedtner" },
+              // { keywords: ["pipeline", "workflow", "multi-modal", "multimodal"], assignee: "fniedtner" },
             ];
             let assignees = [];
             const issueTitle = context.payload.issue.title.toLowerCase();
