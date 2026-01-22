@@ -19,14 +19,14 @@ jobs:
               { keywords: ["pipeline", "workflow", "multi-modal", "multimodal"], assignee: "fniedtner" },
               { keywords: ["playground", "model details"], assignee: "tgokal" },
               { keywords: ["tool", "MCP", "OAuth"], assignee: "lindazqli" },
-              { keywords: ["agent"], assignee: "lebaro-msft" },
+              { keywords: ["agent"], "excludeKeywords": ["tool", "MCP", "OAuth", "workflow", "multi-modal", "multimodal"], ["rag", "RAG", "data", "IQ", "file", "vector", "knowledge"], assignee: "lebaro-msft" },
               { keywords: ["fine-tuning", "finetuning"], assignee: "AliciaFrame" },
-              { keywords: ["deployment", "API"], assignee: "johnrsanders" },
-              { keywords: ["rag", "data", "IQ", "file", "vector", "knowledge"], assignee: "farzad528" },
+              { keywords: ["deployment", "quota"], assignee: "johnrsanders" },
+              { keywords: ["rag", "RAG", "data", "IQ", "file", "vector", "knowledge"], assignee: "farzad528" },
               { keywords: ["model", "catalog", "template"], assignee: "amibp" },
               { keywords: ["design", "UI", "interface"], assignee: "Quirinevwm" },
               { keywords: ["tracing"], assignee: "skohlmeier123" },
-              { keywords: ["slow", "error"], assignee: "slumley" },
+              { keywords: ["slow", "error", "API"], assignee: "slumley" },
               // Example with multiple keywords for the same assignee:
               // { keywords: ["pipeline", "workflow", "multi-modal", "multimodal"], assignee: "fniedtner" },
             ];
