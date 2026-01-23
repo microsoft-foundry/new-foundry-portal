@@ -22,8 +22,7 @@ jobs:
           AZDO_ORG: ${{ secrets.AZURE_DEVOPS_ORG }}
           AZDO_PROJECT: ${{ secrets.AZURE_DEVOPS_PROJECT }}
           AZDO_PAT: ${{ secrets.AZURE_DEVOPS_PAT }}
-          ADO_WORKITEM_TYPE: ${{ secrets.ADO_WORKITEM_TYPE || 'Task' }}
-          # The assignee login (empty string if none)
+          AZDO_WORKITEM_TYPE: ${{ vars.ADO_WORKITEM_TYPE || 'Bug' }}
           ISSUE_ASSIGNEE: ${{ github.event.issue.assignee.login || '' }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
@@ -32,75 +31,6 @@ jobs:
           ISSUE_URL: ${{ github.event.issue.html_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Optional secret mapping fallback (JSON string), example: {"esbakkal":"erdem@example.com"}
-          AZDO_USER_MAP: ${{ secrets.AZDO_USER_MAP || '' }}
+          AZDO_USER_MAP: ${{ vars.ADO_USER_MAP }}
         run: |
           ./scripts/create_work_item.sh
-
-
-
-
-          
-on:
-  issues:
-    types: [opened]
-
-jobs:
-  create-azure-bug:
-    runs-on: ubuntu-latest
-    steps:
-      # 1. Checkout your repo to access files
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      # 2. Create a bug in Azure DevOps, mapping assignee if possible
-      - name: Create Azure DevOps Bug
-        env:
-          AZURE_DEVOPS_PAT: ${{ secrets.AZURE_DEVOPS_PAT }}
-          AZURE_DEVOPS_ORG: ${{ secrets.AZURE_DEVOPS_ORG }}
-          AZURE_DEVOPS_PROJECT: ${{ secrets.AZURE_DEVOPS_PROJECT }}
-          ISSUE_JSON: ${{ toJSON(github.event.issue) }}
-          LABELS_JSON: ${{ toJSON(github.event.issue.labels) }}
-        run: |
-          set -euo pipefail
-
-          # Safely extract fields from the event JSON using jq (handles nulls)
-          TITLE=$(echo "$ISSUE_JSON" | jq -r '.title // ""')
-          DESCRIPTION=$(echo "$ISSUE_JSON" | jq -r '.body // ""')
-          ASSIGNEE_GITHUB=$(echo "$ISSUE_JSON" | jq -r '.assignee.login // empty')
-          LABELS=$(echo "$LABELS_JSON" | jq -r '.[].name' | paste -sd "," -)
-
-          # Load mapping from GitHub username to Azure DevOps user email (safe if file missing)
-          if [ -n "$ASSIGNEE_GITHUB" ] && [ -f github-to-ado-users.json ]; then
-            ASSIGNEE_ADO=$(jq -r --arg user "$ASSIGNEE_GITHUB" '.[$user] // empty' github-to-ado-users.json)
-          else
-            ASSIGNEE_ADO=""
-          fi
-
-          # Build JSON Patch array with jq (conditionally include AssignedTo and Tags)
-          JSON_PAYLOAD=$(jq -n \
-            --arg title "$TITLE" \
-            --arg desc "$DESCRIPTION" \
-            --arg assignee "$ASSIGNEE_ADO" \
-            --arg labels "$LABELS" '
-              ($title, $desc) as [$t, $d] |
-              [
-                { "op": "add", "path": "/fields/System.Title", "value": $t },
-                { "op": "add", "path": "/fields/System.Description", "value": $d }
-              ]
-              +
-              (if ($assignee != "" and $assignee != "null") then
-                 [ { "op": "add", "path": "/fields/System.AssignedTo", "value": $assignee } ]
-               else [] end)
-              +
-              (if ($labels != "" and $labels != "null") then
-                 [ { "op": "add", "path": "/fields/System.Tags", "value": $labels } ]
-               else [] end)
-            ' | jq -c '.') # compact output
-
-          API_URL="https://dev.azure.com/$AZURE_DEVOPS_ORG/$AZURE_DEVOPS_PROJECT/_apis/wit/workitems/\$Bug?api-version=7.0"
-          echo "Payload: $JSON_PAYLOAD"
-
-          curl -s -u ":$AZURE_DEVOPS_PAT" \
-            -H "Content-Type: application/json-patch+json" \
-            -X POST "$API_URL" \
-            -d "$JSON_PAYLOAD"
