@@ -2,6 +2,46 @@ name: Create Azure DevOps Bug from Issue
 
 on:
   issues:
+    types: [opened, reopened, labeled]
+
+permissions:
+  issues: write
+
+jobs:
+  create-workitem:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (for script and optional mapping file)
+        uses: actions/checkout@v4
+
+      - name: Make helper script executable
+        run: chmod +x scripts/create_work_item.sh
+
+      - name: Create or link Azure DevOps work item
+        env:
+          AZDO_ORG: ${{ secrets.AZURE_DEVOPS_ORG }}
+          AZDO_PROJECT: ${{ secrets.AZURE_DEVOPS_PROJECT }}
+          AZDO_PAT: ${{ secrets.AZURE_DEVOPS_PAT }}
+          ADO_WORKITEM_TYPE: ${{ secrets.ADO_WORKITEM_TYPE || 'Task' }}
+          # The assignee login (empty string if none)
+          ISSUE_ASSIGNEE: ${{ github.event.issue.assignee.login || '' }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Optional secret mapping fallback (JSON string), example: {"esbakkal":"erdem@example.com"}
+          AZDO_USER_MAP: ${{ secrets.AZDO_USER_MAP || '' }}
+        run: |
+          ./scripts/create_work_item.sh
+
+
+
+
+          
+on:
+  issues:
     types: [opened]
 
 jobs:
