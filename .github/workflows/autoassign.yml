@@ -25,7 +25,7 @@ jobs:
               { keywords: ["rag", "RAG", "data", "IQ", "file", "vector", "knowledge"], assignee: "farzad528" },
               { keywords: ["model", "catalog", "template"], assignee: "amibp" },
               { keywords: ["design", "UI", "interface"], assignee: "Quirinevwm" },
-              { keywords: ["prepare agent", "publish"], assignee: "fosteramanda" },
+              { keywords: ["prepare agent", "publish", "M365", "Microsoft 365 Copilot", "Agent 365", "A365", "Teams", "Agent Application"], assignee: "fosteramanda" },
               { keywords: ["tracing"], assignee: "skohlmeier123" },
               { keywords: ["slow", "error", "API"], assignee: "slumley" },
               // Example with multiple keywords for the same assignee:
