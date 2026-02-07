@@ -19,7 +19,7 @@ jobs:
               { keywords: ["pipeline", "workflow", "multi-modal", "multimodal"], assignee: "fniedtner" },
               { keywords: ["playground", "model details"], assignee: "tgokal" },
               { keywords: ["tool", "MCP", "OAuth"], assignee: "lindazqli" },
-              { keywords: ["agent"], "excludeKeywords": ["tool", "EntraID", "MCP", "OAuth", "workflow", "multi-modal", "multimodal", "rag", "RAG", "data", "IQ", "file", "vector", "knowledge"], assignee: "lebaro-msft" },
+              { keywords: ["agent"], "excludeKeywords": ["tool", "EntraID", "publish", "published", "publishing", "MCP", "OAuth", "workflow", "multi-modal", "multimodal", "rag", "RAG", "data", "IQ", "file", "vector", "knowledge"], assignee: "lebaro-msft" },
               { keywords: ["fine-tuning", "finetuning"], assignee: "AliciaFrame" },
               { keywords: ["deployment", "quota"], assignee: "johnrsanders" },
               { keywords: ["rag", "RAG", "data", "IQ", "file", "vector", "knowledge"], assignee: "farzad528" },
