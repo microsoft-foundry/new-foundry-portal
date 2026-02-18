@@ -36,8 +36,11 @@ jobs:
               { keywords: ["pipeline", "workflow", "multi-modal", "multimodal"], assignee: "fniedtner" },
               { keywords: ["playground", "model details"], assignee: "tgokal" },
 
-              // Tools => Leah
+              // Tools => Linda
               { keywords: ["tool", "MCP", "OAuth"], assignee: "lindazqli" },
+
+              // Hosted agents => Tina
+              {keywords: ["hosted", "hosted agent"], assignee: "tinaem" },
 
               // Publish/prepare agent => Amanda
               { keywords: ["prepare agent", "publish", "published", "publishing", "M365", "Microsoft 365 Copilot", "Agent 365", "A365", "Teams", "Agent Application", "EntraID"], assignee: "fosteramanda" },
