@@ -6,7 +6,7 @@ on:
 
 permissions:
   issues: write
-  
+
 jobs:
   assign-issue:
     runs-on: ubuntu-latest
@@ -15,41 +15,71 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
+            // Deterministic single assignee: first matching rule wins.
+            // NOTE: order matters.
             const assignments = [
+              // Engineering triage: any error/timeout/perf/API issue => slumley (wins over everything else)
+              {
+                keywords: [
+                  "error", "errors",
+                  "exception", "stack trace", "traceback",
+                  "failed", "failure", "fails",
+                  "timeout", "timed out",
+                  "slow", "slowness", "latency",
+                  "api",
+                  "500", "502", "503", "504",
+                  "400", "401", "403", "404", "429"
+                ],
+                assignee: "slumley"
+              },
+
               { keywords: ["pipeline", "workflow", "multi-modal", "multimodal"], assignee: "fniedtner" },
               { keywords: ["playground", "model details"], assignee: "tgokal" },
+
+              // Tools => Leah
               { keywords: ["tool", "MCP", "OAuth"], assignee: "lindazqli" },
-              { keywords: ["agent"], "excludeKeywords": ["tool", "EntraID", "publish", "published", "publishing", "MCP", "OAuth", "workflow", "multi-modal", "multimodal", "rag", "RAG", "data", "IQ", "file", "vector", "knowledge"], assignee: "lebaro-msft" },
+
+              // Publish/prepare agent => Amanda
+              { keywords: ["prepare agent", "publish", "published", "publishing", "M365", "Microsoft 365 Copilot", "Agent 365", "A365", "Teams", "Agent Application", "EntraID"], assignee: "fosteramanda" },
+
+              // Generic agent issues (non-tools, non-publish, non-RAG, etc.)
+              { keywords: ["agent"], excludeKeywords: ["tool", "EntraID", "publish", "published", "publishing", "MCP", "OAuth", "workflow", "multi-modal", "multimodal", "rag", "RAG", "data", "IQ", "file", "vector", "knowledge"], assignee: "lebaro-msft" },
+
               { keywords: ["fine-tuning", "finetuning"], assignee: "AliciaFrame" },
               { keywords: ["deployment", "quota"], assignee: "johnrsanders" },
               { keywords: ["rag", "RAG", "data", "IQ", "file", "vector", "knowledge"], assignee: "farzad528" },
               { keywords: ["model", "catalog", "template"], assignee: "amibp" },
               { keywords: ["design", "UI", "interface"], assignee: "Quirinevwm" },
-              { keywords: ["prepare agent", "publish", "published", "publishing", "M365", "Microsoft 365 Copilot", "Agent 365", "A365", "Teams", "Agent Application", "EntraID"], assignee: "fosteramanda" },
               { keywords: ["tracing"], assignee: "skohlmeier123" },
-              { keywords: ["slow", "error", "API"], assignee: "slumley" },
-              // Example with multiple keywords for the same assignee:
-              // { keywords: ["pipeline", "workflow", "multi-modal", "multimodal"], assignee: "fniedtner" },
             ];
-            let assignees = [];
-            const issueTitle = context.payload.issue.title.toLowerCase();
-            for (const { keywords, assignee } of assignments) {
-              if (
-                keywords.some(keyword =>
-                  issueTitle.includes(keyword)
-                )
-              ) {
-                assignees.push(assignee);
+
+            const issueTitle = (context.payload.issue.title || "").toLowerCase();
+            const issueBody  = (context.payload.issue.body  || "").toLowerCase();
+            const text = `${issueTitle}\n${issueBody}`;
+
+            let chosen = null;
+
+            for (const rule of assignments) {
+              const keywords = (rule.keywords || []).map(k => String(k).toLowerCase());
+              const excludeKeywords = (rule.excludeKeywords || []).map(k => String(k).toLowerCase());
+
+              const matchesInclude = keywords.some(k => text.includes(k));
+              const matchesExclude = excludeKeywords.some(k => text.includes(k));
+
+              if (matchesInclude && !matchesExclude) {
+                chosen = rule.assignee;
+                break; // first match wins => single assignee
               }
             }
-            if (assignees.length === 0) {
-              // No keywords matched, assign to yourself
-              assignees.push("esrabakkal");
+
+            if (!chosen) {
+              chosen = "esrabakkal";
             }
-            // Remove duplicates just in case
-            await github.rest.issues.addAssignees({
+
+            // Replace assignees to guarantee exactly one.
+            await github.rest.issues.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.payload.issue.number,
-              assignees: [...new Set(assignees)]
+              assignees: [chosen],
             });
